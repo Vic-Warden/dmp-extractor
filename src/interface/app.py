@@ -68,7 +68,6 @@ st.markdown(
 )
 
 # Helper utilities
-
 def is_empty(val) -> bool:
     """Return True for any absent/empty value: None, NaN, NaT, blank string."""
     if val is None:
@@ -83,6 +82,7 @@ def is_empty(val) -> bool:
     return False
 
 def to_datetime_safe(series: pd.Series) -> pd.Series:
+    
     # Use dayfirst=True for DD/MM/YYYY, fallback for older pandas
     try:
         return pd.to_datetime(series, errors="coerce", format="mixed", dayfirst=True)
@@ -153,7 +153,6 @@ def kv_html(label: str, value) -> str:
     )
 
 # Rendering helpers
-
 def render_consultation_row(row: pd.Series, exclude_cols: list = None):
     """Render consultation fields in a responsive 3-column grid (empty values omitted)."""
     items = clean_row_items(row, exclude_cols)
@@ -248,6 +247,7 @@ def _pdf_entry_header(pdf, label: str, font_main="DejaVu", font_bi="BI"):
 
 def _pdf_kv(pdf, key: str, val, font_main="DejaVu", font_bold="B"):
     pdf.set_font(font_main, font_bold, 8)
+    
     # Replace problematic Unicode characters for PDF compatibility
     safe_key = (
         str(key)
@@ -288,6 +288,7 @@ def generate_pdf_bytes(
     font_bold = "B"
     font_italic = "I"
     font_bi = "BI" if has_dejavu else "B"
+    
     # PDF header
     pdf.set_font(font_main, font_bold, 15)
     pdf.set_text_color(17, 24, 39)
@@ -303,6 +304,7 @@ def generate_pdf_bytes(
     pdf.line(15, pdf.get_y() + 2, 195, pdf.get_y() + 2)
     pdf.ln(5)
     pdf.set_text_color(0, 0, 0)
+    
     # Consultations
     consult_df = record.get("Consultation")
     if consult_df is not None and not consult_df.empty:
@@ -322,6 +324,7 @@ def generate_pdf_bytes(
                     continue
                 _pdf_kv(pdf, col, val, font_main, font_bold)
             pdf.ln(3)
+    
     # Keratometry
     kerato_df = record.get("tKERATO")
     if kerato_df is not None and not kerato_df.empty:
@@ -333,6 +336,7 @@ def generate_pdf_bytes(
                     continue
                 _pdf_kv(pdf, col, val, font_main, font_bold)
             pdf.ln(3)
+    
     # Refraction
     refrac_df = record.get("tREFRACTION")
     if refrac_df is not None and not refrac_df.empty:
@@ -344,6 +348,7 @@ def generate_pdf_bytes(
                     continue
                 _pdf_kv(pdf, col, val, font_main, font_bold)
             pdf.ln(3)
+    
     # Documents
     docs_df = record.get("Documents")
     if docs_df is not None and not docs_df.empty:
