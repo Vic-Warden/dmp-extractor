@@ -55,12 +55,14 @@ def get_full_patient_record(dfs: dict, patient_name: str) -> dict | None:
     Build the complete medical file for a patient by following all ID links across the loaded JSON files.
     Returns a dict of { section_name: DataFrame } or None if not found.
     """
+    
     # Find patient in Patients.json
     df_patients = dfs.get("Patients")
     if df_patients is None:
         print("[ERROR] 'Patients' not found in loaded data.")
         return None
     import unicodedata
+    
     # Combine and normalize name and prename, remove accents
     if "NOM" in df_patients.columns:
         nom_col = df_patients["NOM"].fillna("").astype(str)
@@ -89,10 +91,12 @@ def get_full_patient_record(dfs: dict, patient_name: str) -> dict | None:
     patient_id = normalize_id(match.iloc[0]["Code patient"])
     print(f"[OK] Patient found — Code patient: {patient_id}")
     record = {"identity": clean_df(match)}
+    
     # Build doctor ID to name lookup
     doctor_map = {}
     if "person" in dfs:
         doctor_map = dfs["person"].set_index("ID")["Nom+Prénom"].to_dict()
+    
     # Direct links by patient ID
     direct_links = {
         "Ag_Rdv":       "Code Patient",
@@ -113,6 +117,7 @@ def get_full_patient_record(dfs: dict, patient_name: str) -> dict | None:
         if filtered.empty:
             print(f"[EMPTY] '{section}': no rows for patient ID {patient_id}.")
             continue
+        
         # Add doctor name if doctor code column exists
         for doc_col in ("Code Docteur", "Code Médecin"):
             if doc_col in filtered.columns:
@@ -124,6 +129,7 @@ def get_full_patient_record(dfs: dict, patient_name: str) -> dict | None:
             print(f"[OK] '{section}': {len(cleaned)} row(s) recovered.")
         else:
             print(f"[EMPTY] '{section}': data was all-NaN after cleaning.")
+    
     # Indirect links via consultation IDs (for tKERATO, tREFRACTION)
     if "Consultation" not in record:
         print("[WARN] No 'Consultation' section — cannot resolve tKERATO / tREFRACTION.")
