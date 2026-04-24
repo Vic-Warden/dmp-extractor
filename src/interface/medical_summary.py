@@ -2131,9 +2131,8 @@ def _360_card_html(data: dict) -> str:
     # Important alert banner
     important_html = _ck_important_banner(important)
 
-    # # ROW 1 : AV | PIO | Antécédents & Allergies
-    # Dynamic: columns are only added if they have real data.
-    # row1_cells = []
+    # Row 1: AV | PIO | Antécédents & Allergies (dynamic — empty columns omitted)
+    row1_cells = []
     # Block 1 — Acuité Visuelle
     av_html = _ck_av_block(av)
     av_date = av.get("date", "")
@@ -2172,8 +2171,8 @@ def _360_card_html(data: dict) -> str:
         if row1_cells else ""
     )
 
-    # # ROW 2 : Traitements | Diagnostic OPH | Plan de suivi
-    # row2_cells = []
+    # Row 2: Traitements | Diagnostic OPH | Plan de suivi (dynamic)
+    row2_cells = []
     # Block 4 — Traitements (always rendered, shows "aucun" if empty)
     row2_cells.append(
         '<div class="ck-cell ck-cell-teal">'
@@ -2206,9 +2205,8 @@ def _360_card_html(data: dict) -> str:
         if row2_cells else ""
     )
 
-    # # ROW 3 : Prescriptions (full history, collapsed to hist-block)
-    # Only rendered if there are prescriptions.
-    # row3 = ""
+    # Row 3: Prescriptions history (only if present)
+    row3 = ""
     if presc_history:
         row3 = (
             '<div class="ck-row">'
