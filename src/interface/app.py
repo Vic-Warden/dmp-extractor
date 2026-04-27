@@ -5,8 +5,8 @@ import pandas as pd
 import sys
 from pathlib import Path
 
-_src = Path(__file__).resolve().parents[1]       # → src/
-_interface = Path(__file__).resolve().parent      # → src/interface/
+_src = Path(__file__).resolve().parents[1]       # src/
+_interface = Path(__file__).resolve().parent      # src/interface/
 sys.path.insert(0, str(_src))
 sys.path.insert(0, str(_interface))
 
